@@ -1,4 +1,4 @@
-# 📘 API Примеры запросов
+# API Примеры запросов
 
 ## 1. Регистрация пользователя
 
@@ -62,6 +62,8 @@ curl -X POST http://127.0.0.1:8000/books/ \
 curl -X GET http://127.0.0.1:8000/books/
 ```
 
+![img_1.png](img_1.png)
+
 ### Получение книги по ID
 
 ```bash
@@ -100,3 +102,32 @@ curl -X DELETE http://127.0.0.1:8000/books/<BOOK_ID>
 ```
 
 HTTP статус: `401 Unauthorized`
+
+## Создать заказ
+
+```bash
+curl -X POST http://127.0.0.1:8000/orders/ \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <TOKEN>" \
+  -d '{
+        "items": [
+          {
+            "book_id": "<BOOK_ID>",
+            "quantity": 2
+          },
+          {
+            "book_id": "<ANOTHER_BOOK_ID>",
+            "quantity": 1
+          }
+        ]
+      }'
+```
+
+![img.png](img.png)
+
+## Получить свои заказы
+
+```bash
+curl -X GET http://127.0.0.1:8000/orders/my \
+  -H "Authorization: Bearer <TOKEN>"
+```

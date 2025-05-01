@@ -5,6 +5,7 @@ from uuid import UUID
 from sqlalchemy.orm import Session
 
 from . import models, schemas
+from typing import List
 
 
 def get_book(db: Session, book_id: UUID):
@@ -39,3 +40,24 @@ def delete_book(db: Session, book_id: UUID):
         db.delete(db_book)
         db.commit()
     return db_book
+
+
+def create_order(db: Session, user_id: UUID, items: List[schemas.OrderItemCreate]):
+    order = models.Order(user_id=user_id)
+    db.add(order)
+    db.flush()  # получить order.id до коммита
+
+    for item in items:
+        db_item = models.OrderItem(
+            order_id=order.id,
+            book_id=item.book_id,
+            quantity=item.quantity
+        )
+        db.add(db_item)
+
+    db.commit()
+    db.refresh(order)
+    return order
+
+def get_orders_by_user(db: Session, user_id: UUID):
+    return db.query(models.Order).filter(models.Order.user_id == user_id).all()

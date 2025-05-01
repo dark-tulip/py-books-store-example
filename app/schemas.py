@@ -1,5 +1,6 @@
 from datetime import datetime
 from uuid import UUID
+from typing import List
 
 from pydantic import BaseModel, EmailStr
 
@@ -52,3 +53,26 @@ class Token(BaseModel):
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
+
+class OrderItemCreate(BaseModel):
+    book_id: UUID
+    quantity: int
+
+class OrderCreate(BaseModel):
+    items: List[OrderItemCreate]
+
+class OrderItemOut(OrderItemCreate):
+    id: UUID
+    book: BookOut
+
+    class Config:
+        from_attributes = True
+
+class OrderOut(BaseModel):
+    id: UUID
+    created_at: datetime
+    status: str
+    items: List[OrderItemOut]
+
+    class Config:
+        from_attributes = True
