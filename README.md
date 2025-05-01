@@ -18,6 +18,14 @@ pytest
 # 5. Pylint
 pylint app > pylint.txt
 ```
+
+# SWAGGER UI
+
+http://127.0.0.1:8000/docs
+
+![img_2.png](img_2.png)
+
+
 # API Примеры запросов
 
 ## 1. Регистрация пользователя
