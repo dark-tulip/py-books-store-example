@@ -1,50 +1,102 @@
-```plaintext
-├── alembic.ini            # Alembic configuration
-├── docker-compose.yml     # Docker Compose for PostgreSQL
-├── requirements.txt       # Python dependencies
-├── app
-│   ├── main.py            # FastAPI application entrypoint
-│   ├── models.py          # SQLAlchemy models
-│   ├── schemas.py         # Pydantic schemas
-│   ├── crud.py            # CRUD operations
-│   ├── dependencies.py    # DB/session and auth dependencies
-│   ├── auth.py            # JWT/Auth handlers
-│   └── alembic            # Migration scripts folder
-└── tests
-    └── test_main.py       # Pytest TestClient tests
+# 📘 API Примеры запросов
+
+## 1. Регистрация пользователя
+
+```bash
+curl -X POST http://127.0.0.1:8000/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+        "username": "tansh",
+        "email": "tansh@example.com",
+        "password": "mysecurepass"
+      }'
 ```
 
+## 2. Логин и получение токена
 
-. Технические требования
-🔹 База данных
-3 связанные таблицы (используйте SQLAlchemy + Pydantic)
+```bash
+curl -X POST http://127.0.0.1:8000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+        "email": "tansh@example.com",
+        "password": "mysecurepass"
+      }'
+```
 
-Автоматическое создание SQLite-файла ИЛИ Docker с PostgreSQL
+**Ответ:**
 
-Миграции: Alembic (по желанию)
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR...",
+  "token_type": "bearer"
+}
+```
 
-🔹 CRUD через FastAPI
-Реализуйте эндпоинты POST, GET, PUT, DELETE для всех сущностей
+## 3. Получение текущего пользователя (нужен токен)
 
-🔹 Аутентификация и авторизация
-Регистрация / Вход (JWT токены)
+```bash
+curl -X GET http://127.0.0.1:8000/users/me \
+  -H "Authorization: Bearer <TOKEN>"
+```
 
-Как минимум 1 защищённый эндпоинт (например, просмотр задач только авторизованному пользователю)
+## 4. CRUD по книгам
 
-🔹 Бизнес-логика (не CRUD!)
-Примеры:
+### Создание книги
 
-Алгоритм подсчёта рейтинга/приоритета
+```bash
+curl -X POST http://127.0.0.1:8000/books/ \
+  -H "Content-Type: application/json" \
+  -d '{
+        "title": "The Pragmatic Programmer",
+        "description": "Classic programming book",
+        "price": 49.99,
+        "author": "Andy Hunt",
+        "category": "Software Development",
+        "stock": 12
+      }'
+```
 
-Подбор книг по интересам
+### Получение списка книг
 
-Оптимизация расписания
+```bash
+curl -X GET http://127.0.0.1:8000/books/
+```
 
-Автоматическое распределение ресурсов и пр.
+### Получение книги по ID
 
-🔹 Тестирование
-Используйте TestClient из FastAPI
+```bash
+curl -X GET http://127.0.0.1:8000/books/<BOOK_ID>
+```
 
-Желательно покрытие pytest-тестами
+### Обновление книги по ID
 
-Можно дополнительно подготовить коллекцию Postman
+```bash
+curl -X PUT http://127.0.0.1:8000/books/<BOOK_ID> \
+  -H "Content-Type: application/json" \
+  -d '{
+        "title": "The Pragmatic Programmer (Updated)",
+        "description": "Updated description",
+        "price": 45.99,
+        "author": "Andy Hunt",
+        "category": "Software Engineering",
+        "stock": 15
+      }'
+```
+
+### Удаление книги
+
+```bash
+curl -X DELETE http://127.0.0.1:8000/books/<BOOK_ID>
+```
+
+## Проверка токена
+
+Если токен неправильный или не указан — `/users/me` вернёт:
+
+```json
+{
+  "detail": "Not authenticated"
+}
+```
+
+HTTP статус: `401 Unauthorized`

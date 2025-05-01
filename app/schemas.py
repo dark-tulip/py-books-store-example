@@ -20,7 +20,12 @@ class UserOut(BaseModel):
         orm_mode = True
 
 
-class BookCreate(BaseModel):
+# schemas.py
+
+from pydantic import BaseModel
+from uuid import UUID
+
+class BookBase(BaseModel):
     title: str
     description: str
     price: float
@@ -28,9 +33,22 @@ class BookCreate(BaseModel):
     category: str
     stock: int
 
+class BookCreate(BookBase):
+    pass
 
-class BookOut(BookCreate):
+class BookUpdate(BookBase):
+    pass
+
+class BookOut(BookBase):
     id: UUID
 
     class Config:
         orm_mode = True
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
