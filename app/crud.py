@@ -17,7 +17,7 @@ def get_books(db: Session, skip: int = 0, limit: int = 10):
 
 
 def create_book(db: Session, book: schemas.BookCreate):
-    db_book = models.Book(**book.dict())
+    db_book = models.Book(**book.model_dump())
     db.add(db_book)
     db.commit()
     db.refresh(db_book)
@@ -27,7 +27,7 @@ def create_book(db: Session, book: schemas.BookCreate):
 def update_book(db: Session, book_id: UUID, book: schemas.BookUpdate):
     db_book = get_book(db, book_id)
     if db_book:
-        for key, value in book.dict().items():
+        for key, value in book.model_dump().items():
             setattr(db_book, key, value)
         db.commit()
         db.refresh(db_book)
