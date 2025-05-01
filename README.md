@@ -1,3 +1,23 @@
+# Как запустить?
+
+```bash
+# 1. Запустить БД
+docker compose up -d
+
+# 2. Установить venv и зависимости
+python3 -m venv venv
+source venv/bin/activate 
+pip install -r requirements.txt
+
+# 3. Запустить FastAPI
+uvicorn app.main:app --reload
+
+# 4. Тесты
+pytest
+
+# 5. Pylint
+pylint app > pylint.txt
+```
 # API Примеры запросов
 
 ## 1. Регистрация пользователя

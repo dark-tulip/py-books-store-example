@@ -1,22 +1,25 @@
-# crud.py
+"""CRUD operations for books, users, and orders in the Bookstore API."""
 
+from typing import List
 from uuid import UUID
 
 from sqlalchemy.orm import Session
 
 from . import models, schemas
-from typing import List
 
 
 def get_book(db: Session, book_id: UUID):
+    """Retrieve a book by its ID."""
     return db.query(models.Book).filter(models.Book.id == book_id).first()
 
 
 def get_books(db: Session, skip: int = 0, limit: int = 10):
+    """Retrieve a list of books with pagination."""
     return db.query(models.Book).offset(skip).limit(limit).all()
 
 
 def create_book(db: Session, book: schemas.BookCreate):
+    """Create a new book in the database."""
     db_book = models.Book(**book.model_dump())
     db.add(db_book)
     db.commit()
@@ -25,6 +28,7 @@ def create_book(db: Session, book: schemas.BookCreate):
 
 
 def update_book(db: Session, book_id: UUID, book: schemas.BookUpdate):
+    """Update an existing book by its ID."""
     db_book = get_book(db, book_id)
     if db_book:
         for key, value in book.model_dump().items():
@@ -35,6 +39,7 @@ def update_book(db: Session, book_id: UUID, book: schemas.BookUpdate):
 
 
 def delete_book(db: Session, book_id: UUID):
+    """Delete a book from the database by its ID."""
     db_book = get_book(db, book_id)
     if db_book:
         db.delete(db_book)
@@ -43,6 +48,7 @@ def delete_book(db: Session, book_id: UUID):
 
 
 def create_order(db: Session, user_id: UUID, items: List[schemas.OrderItemCreate]):
+    """Create a new order with associated items."""
     order = models.Order(user_id=user_id)
     db.add(order)
     db.flush()  # получить order.id до коммита
@@ -59,5 +65,7 @@ def create_order(db: Session, user_id: UUID, items: List[schemas.OrderItemCreate
     db.refresh(order)
     return order
 
+
 def get_orders_by_user(db: Session, user_id: UUID):
+    """Get all orders made by a specific user."""
     return db.query(models.Order).filter(models.Order.user_id == user_id).all()

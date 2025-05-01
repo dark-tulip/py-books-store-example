@@ -1,3 +1,5 @@
+"""SQLAlchemy models for the Bookstore application."""
+
 import uuid
 from datetime import datetime
 
@@ -9,6 +11,7 @@ from .database import Base
 
 
 class User(Base):
+    """User model representing registered users."""
     __tablename__ = "users"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     username = Column(String, unique=True, index=True)
@@ -20,6 +23,7 @@ class User(Base):
 
 
 class Book(Base):
+    """Book model representing books available in the store."""
     __tablename__ = "books"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     title = Column(String)
@@ -31,6 +35,7 @@ class Book(Base):
 
 
 class Order(Base):
+    """Order model representing customer purchases."""
     __tablename__ = "orders"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"))
@@ -42,6 +47,7 @@ class Order(Base):
 
 
 class OrderItem(Base):
+    """OrderItem model representing books within an order."""
     __tablename__ = "order_items"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     order_id = Column(UUID(as_uuid=True), ForeignKey("orders.id"))
@@ -50,4 +56,3 @@ class OrderItem(Base):
 
     order = relationship("Order", back_populates="items")
     book = relationship("Book")
-

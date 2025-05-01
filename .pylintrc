@@ -1,0 +1,25 @@
+[MASTER]
+ignore=venv
+extension-pkg-whitelist=pydantic
+
+[MESSAGES CONTROL]
+disable=
+    missing-module-docstring,
+    missing-class-docstring,
+    missing-function-docstring,
+    too-few-public-methods,
+    unnecessary-pass,
+    import-error,
+    unused-import,
+    invalid-name,
+    no-member
+
+[FORMAT]
+max-line-length=100
+
+[TYPECHECK]
+ignored-modules=pydantic,fastapi,sqlalchemy,jose,passlib
+ignored-classes=BaseModel
+
+[DESIGN]
+max-args=10

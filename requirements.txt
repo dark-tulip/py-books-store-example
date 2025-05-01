@@ -9,4 +9,3 @@ passlib[bcrypt]
 pytest
 httpx
 psycopg2-binary
-httpx
